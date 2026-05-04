@@ -1,0 +1,53 @@
+# Virtual Review Board — runs on pull requests targeting branch `qa`.
+# Requires repository secret: OPENAI_API_KEY
+
+name: Virtual Review Board (QA)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - qa
+
+concurrency:
+  group: vrb-${{ github.repository }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  ai-pr-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: virtual-review-board
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: virtual-review-board/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Virtual Review Board
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # Optional: set repo Actions variables OPENAI_MODEL / GITHUB_APP_NAME and reference them here.
+          OPENAI_MODEL: gpt-4o-mini
+          GITHUB_APP_NAME: VirtualReviewBoard
+          GITHUB_WEBHOOK_SECRET: ""
+          ENABLE_GITHUB_CHECK_RUN: "true"
+          LOG_LEVEL: INFO
+        run: python -m app.ci_review
