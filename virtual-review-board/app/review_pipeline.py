@@ -74,7 +74,7 @@ def execute_pr_review(
                 "component": "review_pipeline",
                 "repo": f"{owner}/{repo}",
                 "pr_number": pr_number,
-                "message": str(exc),
+                "error_detail": str(exc),
             },
         )
         raise
@@ -85,7 +85,7 @@ def execute_pr_review(
                 "component": "review_pipeline",
                 "repo": f"{owner}/{repo}",
                 "pr_number": pr_number,
-                "message": str(exc),
+                "error_detail": str(exc),
             },
         )
         raise

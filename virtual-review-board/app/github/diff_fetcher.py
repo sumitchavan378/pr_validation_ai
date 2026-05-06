@@ -100,7 +100,7 @@ class DiffFetcher:
         except GitHubAPIError as exc:
             logger.warning(
                 "file_fetch_failed",
-                extra={"component": "diff_fetcher", "path": path, "message": str(exc)},
+                extra={"component": "diff_fetcher", "path": path, "error_detail": str(exc)},
             )
             return None
         if not isinstance(data, dict):

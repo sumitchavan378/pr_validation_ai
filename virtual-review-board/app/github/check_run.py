@@ -43,6 +43,6 @@ def create_check_run(
     except GitHubAPIError as exc:
         logger.warning(
             "check_run_failed",
-            extra={"component": "check_run", "message": str(exc), "status": exc.status_code},
+            extra={"component": "check_run", "error_detail": str(exc), "status": exc.status_code},
         )
         return None

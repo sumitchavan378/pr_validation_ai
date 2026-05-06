@@ -6,7 +6,7 @@ import json
 from typing import Any
 
 from crewai import Crew, Task
-from langchain_openai import ChatOpenAI
+from crewai.llm import LLM
 
 from app.agents.compliance_officer import create_compliance_officer, load_compliance_instructions
 from app.agents.lead_reviewer import create_lead_reviewer, load_lead_instructions
@@ -102,7 +102,7 @@ def run_virtual_review_board(bundle: dict[str, Any], settings: Settings) -> dict
 
     Returns dict with keys: specialist_reports, lead_report, markdown_comment, status_result
     """
-    llm = ChatOpenAI(
+    llm = LLM(
         model=settings.openai_model,
         temperature=0.1,
         api_key=settings.openai_api_key,

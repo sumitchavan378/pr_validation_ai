@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from crewai import Agent
-from langchain_openai import ChatOpenAI
+from crewai.llm import LLM
 
 
 def _prompt_path() -> Path:
@@ -16,7 +16,7 @@ def load_quality_instructions() -> str:
     return _prompt_path().read_text(encoding="utf-8")
 
 
-def create_quality_architect(llm: ChatOpenAI) -> Agent:
+def create_quality_architect(llm: LLM) -> Agent:
     return Agent(
         role="Code Quality Architect",
         goal=(

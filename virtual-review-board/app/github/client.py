@@ -79,7 +79,7 @@ class GitHubClient:
                 last_exc = exc
                 logger.warning(
                     "github_request_retry",
-                    extra={"component": "github", "message": str(exc), "attempt": attempt},
+                    extra={"component": "github", "error_detail": str(exc), "attempt": attempt},
                 )
                 time.sleep(delay)
                 delay = min(delay * 2, 32.0)

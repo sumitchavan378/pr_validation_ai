@@ -69,5 +69,8 @@ if __name__ == "__main__":
     except SystemExit as e:
         raise e
     except Exception as exc:  # noqa: BLE001
-        logger.exception("ci_review_fatal", extra={"component": "ci_review", "message": str(exc)})
+        logger.exception(
+            "ci_review_fatal",
+            extra={"component": "ci_review", "error_detail": str(exc)},
+        )
         raise SystemExit(1) from exc
