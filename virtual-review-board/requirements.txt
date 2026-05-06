@@ -3,7 +3,7 @@ python-dotenv>=1.0.1
 pydantic>=2.10.0
 pydantic-settings>=2.6.0
 requests>=2.32.0
-crewai>=0.86.0
+crewai[google-genai]>=0.86.0
 tenacity>=9.0.0
 
 # Dev / test

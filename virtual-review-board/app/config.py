@@ -2,7 +2,7 @@
 
 from functools import lru_cache
 
-from pydantic import Field
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -13,10 +13,13 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    openai_api_key: str = Field(..., alias="OPENAI_API_KEY")
+    google_api_key: str = Field(
+        ...,
+        validation_alias=AliasChoices("GOOGLE_API_KEY", "GEMINI_API_KEY"),
+    )
     github_token: str = Field(..., alias="GITHUB_TOKEN")
     github_app_name: str = Field(default="VirtualReviewBoard", alias="GITHUB_APP_NAME")
-    openai_model: str = Field(default="gpt-4o-mini", alias="OPENAI_MODEL")
+    gemini_model: str = Field(default="gemini-2.0-flash", alias="GEMINI_MODEL")
 
     readiness_total_checks: int = Field(default=20, alias="READINESS_TOTAL_CHECKS")
     high_issue_yellow_threshold: int = Field(default=3, alias="HIGH_ISSUE_YELLOW_THRESHOLD")

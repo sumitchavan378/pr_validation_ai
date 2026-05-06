@@ -1,6 +1,6 @@
 # Virtual Review Board
 
-Multi-agent **Reviewer 0** for GitHub pull requests. On each qualifying event, the job fetches the PR diff (and full changed files when possible), runs **CrewAI** crews with **LangChain `ChatOpenAI`**, merges structured JSON from specialists, applies **severity scoring** and **status thresholds**, posts one markdown PR comment, and optionally records a **GitHub Check Run**.
+Multi-agent **Reviewer 0** for GitHub pull requests. On each qualifying event, the job fetches the PR diff (and full changed files when possible), runs **CrewAI** crews backed by **Google Gemini** ([Google AI Studio](https://aistudio.google.com/) API key), merges structured JSON from specialists, applies **severity scoring** and **status thresholds**, posts one markdown PR comment, and optionally records a **GitHub Check Run**.
 
 This project is intended to run **only from GitHub Actions** (no HTTP server in this repo).
 
@@ -26,11 +26,11 @@ Workflow: **`.github/workflows/virtual-review-board-qa.yml`**
 
 | Name | Purpose |
 |------|---------|
-| `OPENAI_API_KEY` | OpenAI API key |
+| `GOOGLE_API_KEY` | API key from [Google AI Studio](https://aistudio.google.com/) |
 
 `GITHUB_TOKEN` is provided automatically by Actions — do not add it as a secret.
 
-**Optional:** edit the workflow `env` block for `OPENAI_MODEL`, `GITHUB_APP_NAME`, `ENABLE_GITHUB_CHECK_RUN`, `LOG_LEVEL`, or tuning variables from `.env.example`.
+**Optional:** edit the workflow `env` block for `GEMINI_MODEL`, `GITHUB_APP_NAME`, `ENABLE_GITHUB_CHECK_RUN`, `LOG_LEVEL`, or tuning variables from `.env.example`. You may use `GEMINI_API_KEY` instead of `GOOGLE_API_KEY` in `.env` (same value; see `app/config.py`).
 
 **Branch:** ensure **`qa`** exists; the workflow filter is the PR **base** (merge target).
 
@@ -50,10 +50,10 @@ Copy the workflow into `.github/workflows/`, then:
 
 | Variable | Description |
 |----------|-------------|
-| `OPENAI_API_KEY` | Required for model calls |
+| `GOOGLE_API_KEY` | Required for Gemini (or `GEMINI_API_KEY`, equivalent) |
 | `GITHUB_TOKEN` | Set automatically in Actions; required if you run `ci_review` manually |
 | `GITHUB_APP_NAME` | Check run and comment header label |
-| `OPENAI_MODEL` | e.g. `gpt-4o-mini`, `gpt-4o` |
+| `GEMINI_MODEL` | e.g. `gemini-2.0-flash`, `gemini-1.5-flash` |
 | `READINESS_TOTAL_CHECKS` | Score denominator (default 20) |
 | `HIGH_ISSUE_YELLOW_THRESHOLD` | High-issue count → YELLOW (default 3) |
 | `MAX_DIFF_CHARS` / `MAX_FILE_CONTENT_CHARS` | Prompt size caps |
@@ -77,7 +77,7 @@ Posted markdown includes overall status (RED/YELLOW/GREEN), readiness score, sec
 
 ## Operational notes
 
-- **Cost & latency:** four Crew runs per trigger; tune `OPENAI_MODEL` and caps for cost.
+- **Cost & latency:** four Crew runs per trigger; tune `GEMINI_MODEL` and caps for cost (Google AI Studio quotas apply).
 - **Failures:** logged as structured JSON to the Actions log. Specialist JSON parse failures degrade to empty `issues` with a note; lead parse failure uses a conservative fallback.
 - **Advisory only:** combine with branch protection and human review as you see fit.
 

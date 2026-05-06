@@ -103,9 +103,9 @@ def run_virtual_review_board(bundle: dict[str, Any], settings: Settings) -> dict
     Returns dict with keys: specialist_reports, lead_report, markdown_comment, status_result
     """
     llm = LLM(
-        model=settings.openai_model,
+        model=settings.gemini_model,
         temperature=0.1,
-        api_key=settings.openai_api_key,
+        api_key=settings.google_api_key,
     )
 
     context = _build_pr_context(bundle)

@@ -1,5 +1,5 @@
 # Virtual Review Board — runs on pull requests targeting branch `qa`.
-# Requires repository secret: OPENAI_API_KEY
+# Requires repository secret: GOOGLE_API_KEY (Google AI Studio API key)
 
 name: Virtual Review Board (QA)
 
@@ -43,9 +43,9 @@ jobs:
       - name: Run Virtual Review Board
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          # Optional: set repo Actions variables OPENAI_MODEL / GITHUB_APP_NAME and reference them here.
-          OPENAI_MODEL: gpt-4o-mini
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          # Optional: set repo Actions variables GEMINI_MODEL / GITHUB_APP_NAME and reference them here.
+          GEMINI_MODEL: gemini-2.0-flash
           GITHUB_APP_NAME: VirtualReviewBoard
           GITHUB_WEBHOOK_SECRET: ""
           ENABLE_GITHUB_CHECK_RUN: "true"
