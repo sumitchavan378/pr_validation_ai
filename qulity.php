@@ -1,34 +1,49 @@
 <?php
+declare(strict_types=1);
 
-// bad naming, no strict types, no comments
-function calc($a,$b){
-    $result = 0;
-
-    // unnecessary loop
-    for($i=0;$i<1;$i++){
-        $result = $a + $b;
-    }
-
-    // debug print left in code
-    echo "Result is: ".$result;
-
-    return $result;
-}
-
-// hardcoded values, no validation
-$x = $_GET['x'];
-$y = $_GET['y'];
-
-if($x && $y){
-    calc($x,$y);
-}else{
-    echo "missing input";
-}
-
-// unused variable
-$unused = 123;
-
-// duplicate logic
-function calc2($a,$b){
+/**
+ * Adds two numbers safely.
+ *
+ * @param float $a
+ * @param float $b
+ * @return float
+ */
+function calculateSum(float $a, float $b): float
+{
     return $a + $b;
 }
+
+/**
+ * Fetch and validate input from GET request.
+ *
+ * @param string $key
+ * @return float|null
+ */
+function getValidatedNumber(string $key): ?float
+{
+    if (!isset($_GET[$key])) {
+        return null;
+    }
+
+    $value = trim((string) $_GET[$key]);
+
+    // Allow only numeric values
+    if (!is_numeric($value)) {
+        return null;
+    }
+
+    return (float) $value;
+}
+
+$x = getValidatedNumber('x');
+$y = getValidatedNumber('y');
+
+if ($x === null || $y === null) {
+    echo "Missing or invalid input. Please provide valid numeric values for x and y.";
+    exit;
+}
+
+$result = calculateSum($x, $y);
+
+// Safe output
+echo "Result is: " . htmlspecialchars((string)$result, ENT_QUOTES, 'UTF-8');
