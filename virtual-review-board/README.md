@@ -8,7 +8,7 @@ This project is intended to run **only from GitHub Actions** (no HTTP server in 
 
 - **Entry point:** `python -m app.ci_review` (see `.github/workflows/virtual-review-board-qa.yml`).
 - **`DiffFetcher`** loads the unified diff, changed-file metadata, and file contents at the PR head (with size caps).
-- **Specialists** (one Crew each): Security Auditor, Code Quality Architect, Compliance Officer — JSON `issues` arrays.
+- **Specialists** (one Crew each): Security Auditor, Code Quality Architect — JSON `issues` arrays.
 - **Lead Reviewer** merges specialist output into narrative and patch suggestions.
 - **`readiness_score`** uses severity weights (Critical=10, High=7, Medium=4, Low=1) against `READINESS_TOTAL_CHECKS`. **`derive_pr_status`:** any Critical → **RED**; High count ≥ threshold → **YELLOW**; else **GREEN**.
 - **`GitHubClient`** uses `requests` with retries, backoff on 5xx, and basic rate-limit handling.
@@ -77,7 +77,7 @@ Posted markdown includes overall status (RED/YELLOW/GREEN), readiness score, sec
 
 ## Operational notes
 
-- **Cost & latency:** four Crew runs per trigger; tune `GEMINI_MODEL` and caps for cost (Google AI Studio quotas apply).
+- **Cost & latency:** three Crew runs per trigger; tune `GEMINI_MODEL` and caps for cost (Google AI Studio quotas apply).
 - **Failures:** logged as structured JSON to the Actions log. Specialist JSON parse failures degrade to empty `issues` with a note; lead parse failure uses a conservative fallback.
 - **Advisory only:** combine with branch protection and human review as you see fit.
 

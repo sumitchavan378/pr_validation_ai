@@ -8,7 +8,6 @@ from typing import Any
 from crewai import Crew, Task
 from crewai.llm import LLM
 
-from app.agents.compliance_officer import create_compliance_officer, load_compliance_instructions
 from app.agents.lead_reviewer import create_lead_reviewer, load_lead_instructions
 from app.agents.quality_architect import create_quality_architect, load_quality_instructions
 from app.agents.security_auditor import create_security_auditor, load_security_instructions
@@ -120,16 +119,10 @@ def run_virtual_review_board(bundle: dict[str, Any], settings: Settings) -> dict
         load_quality_instructions(),
         context,
     )
-    compliance = _kickoff_json(
-        create_compliance_officer(llm),
-        load_compliance_instructions(),
-        context,
-    )
 
     lead_blob = {
         "security": security,
         "quality": quality,
-        "compliance": compliance,
     }
     lead_instructions = load_lead_instructions().strip()
     lead_description = f"""{lead_instructions}
@@ -179,7 +172,7 @@ Issue objects must include severity, title, location, line, why, fix, and option
             ),
         }
 
-    merged_issues = _merge_issues(security, quality, compliance)
+    merged_issues = _merge_issues(security, quality)
     status = derive_pr_status(
         merged_issues,
         total_checks=settings.readiness_total_checks,
