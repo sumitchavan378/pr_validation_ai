@@ -35,6 +35,26 @@ class UserManager {
         }
     }
 
+    // Duplicate logic issue
+    function getUserEmail($id){
+
+        $query = "SELECT email FROM users WHERE id = $id";
+
+        $result = mysqli_query($this->db, $query);
+
+        if(mysqli_num_rows($result) > 0){
+
+            while($row = mysqli_fetch_assoc($result)){
+                $data = $row['email'];
+            }
+
+            return $data;
+
+        } else {
+            return null;
+        }
+    }
+
     function createUser($name,$email){
 
         // No validation
