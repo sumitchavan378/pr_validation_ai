@@ -8,7 +8,12 @@ from app.github.check_run import create_check_run
 from app.github.client import GitHubClient, GitHubAPIError
 from app.github.comment_poster import post_pr_comment
 from app.github.diff_fetcher import DiffFetcher
-from app.utils.formatter import build_pr_comment, categorize_issues_for_comment
+from app.utils.formatter import (
+    build_pr_comment,
+    categorize_issues_for_comment,
+    limit_issues_for_comment,
+    truncate_pr_comment,
+)
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -31,6 +36,14 @@ def execute_pr_review(
         merged = list(result.get("merged_issues") or [])
         status = result["status_result"].label
         crit, hi, med, minor = categorize_issues_for_comment(merged)
+        crit, hi, med, minor, high_omitted = limit_issues_for_comment(
+            crit,
+            hi,
+            med,
+            minor,
+            include_minor=settings.include_minor_in_comment,
+            max_high_issues=settings.max_high_issues_in_comment,
+        )
         patches = lead.get("suggested_patches") or []
         if not isinstance(patches, list):
             patches = []
@@ -49,7 +62,10 @@ def execute_pr_review(
             suggested_patches=patches_str,
             final_recommendation=str(lead.get("final_recommendation") or "_No recommendation._"),
             app_name=settings.github_app_name,
+            include_minor=settings.include_minor_in_comment,
+            high_omitted_count=high_omitted,
         )
+        body = truncate_pr_comment(body, settings.max_comment_chars)
         post_pr_comment(client, owner, repo, pr_number, body)
 
         if settings.enable_github_check_run:

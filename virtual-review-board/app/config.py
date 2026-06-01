@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     high_issue_yellow_threshold: int = Field(default=3, alias="HIGH_ISSUE_YELLOW_THRESHOLD")
     max_diff_chars: int = Field(default=120_000, alias="MAX_DIFF_CHARS")
     max_file_content_chars: int = Field(default=80_000, alias="MAX_FILE_CONTENT_CHARS")
+    include_minor_in_comment: bool = Field(default=False, alias="INCLUDE_MINOR_IN_COMMENT")
+    max_high_issues_in_comment: int = Field(default=5, alias="MAX_HIGH_ISSUES_IN_COMMENT")
+    max_comment_chars: int = Field(default=20_000, alias="MAX_COMMENT_CHARS")
     enable_github_check_run: bool = Field(default=True, alias="ENABLE_GITHUB_CHECK_RUN")
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
 

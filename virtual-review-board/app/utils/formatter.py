@@ -42,6 +42,37 @@ def _dict_issues(items: list[Any]) -> list[dict[str, Any]]:
     return [i for i in items if isinstance(i, dict)]
 
 
+def limit_issues_for_comment(
+    critical: list[dict[str, Any]],
+    high: list[dict[str, Any]],
+    medium: list[dict[str, Any]],
+    minor: list[dict[str, Any]],
+    *,
+    include_minor: bool,
+    max_high_issues: int,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]], int]:
+    """Apply PR comment display limits; returns buckets and count of omitted high issues."""
+    high_omitted = 0
+    if max_high_issues >= 0 and len(high) > max_high_issues:
+        high_omitted = len(high) - max_high_issues
+        high = high[:max_high_issues]
+    if not include_minor:
+        minor = []
+    return critical, high, medium, minor, high_omitted
+
+
+def truncate_pr_comment(body: str, max_chars: int) -> str:
+    """Trim comment body to max_chars, preserving a short truncation notice."""
+    if max_chars <= 0 or len(body) <= max_chars:
+        return body
+    notice = "\n\n---\n_Comment truncated to fit the configured character limit._"
+    budget = max_chars - len(notice)
+    if budget <= 0:
+        return body[:max_chars]
+    trimmed = body[:budget].rstrip()
+    return trimmed + notice
+
+
 def build_pr_comment(
     *,
     overall_status: str,
@@ -53,6 +84,8 @@ def build_pr_comment(
     suggested_patches: list[str],
     final_recommendation: str,
     app_name: str = "Virtual Review Board",
+    include_minor: bool = False,
+    high_omitted_count: int = 0,
 ) -> str:
     """Assemble the final markdown body for a single PR comment."""
     status_line = overall_status.upper()
@@ -82,6 +115,8 @@ def build_pr_comment(
     parts.extend(["", "### 🟠 High Priority Issues"])
     if hi:
         parts.extend(_issue_block(i) for i in hi)
+        if high_omitted_count > 0:
+            parts.append(f"_…and {high_omitted_count} more high priority issue(s) omitted._")
     else:
         parts.append("_None detected._")
     parts.extend(["", "### 🟡 Medium Priority Suggestions"])
@@ -89,11 +124,12 @@ def build_pr_comment(
         parts.extend(_issue_block(i) for i in med)
     else:
         parts.append("_None._")
-    parts.extend(["", "### 🟢 Minor / Optional Improvements"])
-    if mino:
-        parts.extend(_issue_block(i) for i in mino)
-    else:
-        parts.append("_None._")
+    if include_minor:
+        parts.extend(["", "### 🟢 Minor / Optional Improvements"])
+        if mino:
+            parts.extend(_issue_block(i) for i in mino)
+        else:
+            parts.append("_None._")
 
     parts.extend(["", "### ✅ Suggested Patches"])
     if suggested_patches:
