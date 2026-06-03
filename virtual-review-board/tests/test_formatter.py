@@ -17,14 +17,13 @@ def test_build_pr_comment_sections():
         high=[],
         medium=[],
         minor=[],
-        suggested_patches=["- a\n+ b"],
         final_recommendation="Block merge.",
         app_name="Virtual Review Board",
     )
     assert "Virtual Review Board" in md
     assert "43%" in md
     assert "Critical Issues" in md
-    assert "Suggested Patches" in md
+    assert "Suggested Patches" not in md
     assert "Block merge." in md
 
 
@@ -56,7 +55,6 @@ def test_build_pr_comment_hides_minor_section():
         high=[],
         medium=[],
         minor=[{"title": "nit", "location": "a.py", "severity": "Low"}],
-        suggested_patches=[],
         final_recommendation="LGTM.",
         include_minor=False,
     )
@@ -72,7 +70,6 @@ def test_build_pr_comment_caps_high_with_notice():
         high=high[:5],
         medium=[],
         minor=[],
-        suggested_patches=[],
         final_recommendation="Review high items.",
         high_omitted_count=2,
     )

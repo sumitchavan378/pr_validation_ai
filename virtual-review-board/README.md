@@ -73,7 +73,7 @@ permissions:
 
 ## Example PR comment shape
 
-Posted markdown includes overall status (RED/YELLOW/GREEN), readiness score, sections for critical / high / medium / minor items, suggested patches, and a final recommendation — see `app/utils/formatter.py` (`build_pr_comment`).
+Posted markdown includes overall status (RED/YELLOW/GREEN), readiness score, sections for critical / high / medium / minor items, and a final recommendation — see `app/utils/formatter.py` (`build_pr_comment`).
 
 ## Operational notes
 

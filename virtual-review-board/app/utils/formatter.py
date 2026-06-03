@@ -81,7 +81,6 @@ def build_pr_comment(
     high: list[dict[str, Any]],
     medium: list[dict[str, Any]],
     minor: list[dict[str, Any]],
-    suggested_patches: list[str],
     final_recommendation: str,
     app_name: str = "Virtual Review Board",
     include_minor: bool = False,
@@ -130,15 +129,6 @@ def build_pr_comment(
             parts.extend(_issue_block(i) for i in mino)
         else:
             parts.append("_None._")
-
-    parts.extend(["", "### ✅ Suggested Patches"])
-    if suggested_patches:
-        for p in suggested_patches:
-            parts.append("```diff")
-            parts.append(p.strip())
-            parts.append("```")
-    else:
-        parts.append("_No consolidated patches._")
 
     parts.extend(["", "### Final Recommendation", "", final_recommendation, ""])
     return "\n".join(parts)

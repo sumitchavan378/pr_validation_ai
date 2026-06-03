@@ -44,14 +44,6 @@ def execute_pr_review(
             include_minor=settings.include_minor_in_comment,
             max_high_issues=settings.max_high_issues_in_comment,
         )
-        patches = lead.get("suggested_patches") or []
-        if not isinstance(patches, list):
-            patches = []
-        patches_str = [str(p) for p in patches if p]
-        for issue in merged:
-            if isinstance(issue, dict) and issue.get("patch"):
-                patches_str.append(str(issue["patch"]))
-
         body = build_pr_comment(
             overall_status=status,
             readiness_score=float(lead.get("readiness_score", 0)),
@@ -59,7 +51,6 @@ def execute_pr_review(
             high=hi,
             medium=med,
             minor=minor,
-            suggested_patches=patches_str,
             final_recommendation=str(lead.get("final_recommendation") or "_No recommendation._"),
             app_name=settings.github_app_name,
             include_minor=settings.include_minor_in_comment,

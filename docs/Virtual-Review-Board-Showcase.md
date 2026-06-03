@@ -220,9 +220,8 @@ A single markdown comment is posted per run (new comment each time the workflow 
 4. **Critical issues** — file, line, why, fix, optional patch blocks
 5. **High priority issues**
 6. **Medium priority suggestions**
-7. **Minor / optional improvements**
-8. **Suggested patches** — consolidated diff snippets
-9. **Final recommendation** — narrative summary
+7. **Minor / optional improvements** (hidden by default via `INCLUDE_MINOR_IN_COMMENT=false`)
+8. **Final recommendation** — narrative summary
 
 If `ENABLE_GITHUB_CHECK_RUN` is true, a check appears on the commit with title like `Virtual Review Board — GREEN` and conclusion **failure** only when status is RED.
 
