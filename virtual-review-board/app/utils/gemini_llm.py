@@ -10,12 +10,12 @@ def normalize_gemini_model_id(model: str) -> str:
     Ensure model id uses LiteLLM/CrewAI provider prefix so requests hit Gemini, not OpenAI.
 
     Examples:
-        gemini-2.5-flash -> gemini/gemini-2.5-flash
-        gemini/gemini-2.5-flash -> unchanged
+        gemini-3.5-flash -> gemini/gemini-3.5-flash
+        gemini/gemini-3.5-flash -> unchanged
     """
     m = (model or "").strip()
     if not m:
-        return "gemini/gemini-2.5-flash"
+        return "gemini/gemini-3.5-flash"
     if "/" in m:
         return m
     if m.startswith("gemini-"):

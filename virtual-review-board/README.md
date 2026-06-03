@@ -53,7 +53,7 @@ Copy the workflow into `.github/workflows/`, then:
 | `GOOGLE_API_KEY` | Required for Gemini (or `GEMINI_API_KEY`, equivalent) |
 | `GITHUB_TOKEN` | Set automatically in Actions; required if you run `ci_review` manually |
 | `GITHUB_APP_NAME` | Check run and comment header label |
-| `GEMINI_MODEL` | Use `gemini/<model-id>` (e.g. `gemini/gemini-2.5-flash`). Bare `gemini-2.5-flash` is auto-prefixed. |
+| `GEMINI_MODEL` | Use `gemini/<model-id>` (e.g. `gemini/gemini-3.5-flash`). Bare `gemini-3.5-flash` is auto-prefixed. |
 | `READINESS_TOTAL_CHECKS` | Score denominator (default 20) |
 | `HIGH_ISSUE_YELLOW_THRESHOLD` | High-issue count → YELLOW (default 3) |
 | `MAX_DIFF_CHARS` / `MAX_FILE_CONTENT_CHARS` | Prompt size caps |

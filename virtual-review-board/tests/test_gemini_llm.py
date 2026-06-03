@@ -13,5 +13,5 @@ def test_normalize_gemini_model_id_unchanged_when_prefixed():
 
 
 def test_normalize_gemini_model_id_empty_defaults():
-    assert normalize_gemini_model_id("") == "gemini/gemini-2.5-flash"
-    assert normalize_gemini_model_id("   ") == "gemini/gemini-2.5-flash"
+    assert normalize_gemini_model_id("") == "gemini/gemini-3.5-flash"
+    assert normalize_gemini_model_id("   ") == "gemini/gemini-3.5-flash"
