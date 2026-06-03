@@ -116,7 +116,7 @@ flowchart TB
 | Code Quality Architect | [`app/prompts/quality_prompt.txt`](../virtual-review-board/app/prompts/quality_prompt.txt) | Maintainability, design, testing gaps |
 | Lead Reviewer | [`app/prompts/lead_prompt.txt`](../virtual-review-board/app/prompts/lead_prompt.txt) | Merge specialist output; executive summary; no invented file paths |
 
-The LLM backend is **Google Gemini** (configured via `GEMINI_MODEL`, default `gemini-3.5-flash`) using an API key from Google AI Studio. Orchestration uses **CrewAI**.
+The LLM backend is **Google Gemini** (configured via `GEMINI_MODEL`, default `gemini/gemini-2.5-flash`) using an API key from Google AI Studio. Orchestration uses **CrewAI**.
 
 ### Specialist JSON contract (simplified)
 
@@ -282,7 +282,7 @@ Workflow permissions: `contents: read`, `pull-requests: write`, `checks: write`.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `GEMINI_MODEL` | `gemini-3.5-flash` | Model id for all crews |
+| `GEMINI_MODEL` | `gemini/gemini-2.5-flash` | Model id for all crews |
 | `GITHUB_APP_NAME` | `VirtualReviewBoard` | Comment and check run title |
 | `READINESS_TOTAL_CHECKS` | `20` | Denominator for readiness score |
 | `HIGH_ISSUE_YELLOW_THRESHOLD` | `3` | High issues needed for YELLOW |

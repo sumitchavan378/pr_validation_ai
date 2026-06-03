@@ -53,7 +53,7 @@ Copy the workflow into `.github/workflows/`, then:
 | `GOOGLE_API_KEY` | Required for Gemini (or `GEMINI_API_KEY`, equivalent) |
 | `GITHUB_TOKEN` | Set automatically in Actions; required if you run `ci_review` manually |
 | `GITHUB_APP_NAME` | Check run and comment header label |
-| `GEMINI_MODEL` | e.g. `gemini-3.5-flash`, `gemini-2.5-flash` |
+| `GEMINI_MODEL` | Use `gemini/<model-id>` (e.g. `gemini/gemini-2.5-flash`). Bare `gemini-2.5-flash` is auto-prefixed. |
 | `READINESS_TOTAL_CHECKS` | Score denominator (default 20) |
 | `HIGH_ISSUE_YELLOW_THRESHOLD` | High-issue count → YELLOW (default 3) |
 | `MAX_DIFF_CHARS` / `MAX_FILE_CONTENT_CHARS` | Prompt size caps |
@@ -78,6 +78,7 @@ Posted markdown includes overall status (RED/YELLOW/GREEN), readiness score, sec
 ## Operational notes
 
 - **Cost & latency:** three Crew runs per trigger; tune `GEMINI_MODEL` and caps for cost (Google AI Studio quotas apply).
+- **Gemini auth:** use `GOOGLE_API_KEY` from AI Studio. Do not set `OPENAI_API_KEY` to your Google key — CrewAI would send it to OpenAI and return 401.
 - **Failures:** logged as structured JSON to the Actions log. Specialist JSON parse failures degrade to empty `issues` with a note; lead parse failure uses a conservative fallback.
 - **Advisory only:** combine with branch protection and human review as you see fit.
 

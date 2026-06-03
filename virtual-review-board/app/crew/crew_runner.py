@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from typing import Any
 
 from crewai import Crew, Task
@@ -13,6 +14,7 @@ from app.agents.quality_architect import create_quality_architect, load_quality_
 from app.agents.security_auditor import create_security_auditor, load_security_instructions
 from app.config import Settings
 from app.scoring.readiness_score import derive_pr_status
+from app.utils.gemini_llm import configure_gemini_env, normalize_gemini_model_id
 from app.utils.json_extract import parse_json_blob
 from app.utils.logger import get_logger
 
@@ -101,8 +103,19 @@ def run_virtual_review_board(bundle: dict[str, Any], settings: Settings) -> dict
 
     Returns dict with keys: specialist_reports, lead_report, markdown_comment, status_result
     """
+    configure_gemini_env(settings.google_api_key)
+    model_id = normalize_gemini_model_id(settings.gemini_model)
+    if os.environ.get("OPENAI_API_KEY", "").startswith("AIza"):
+        logger.warning(
+            "openai_api_key_looks_like_google_key",
+            extra={
+                "component": "crew_runner",
+                "hint": "Unset OPENAI_API_KEY or use a real OpenAI key; Gemini uses GOOGLE_API_KEY.",
+            },
+        )
+    logger.info("gemini_llm_configured", extra={"component": "crew_runner", "model": model_id})
     llm = LLM(
-        model=settings.gemini_model,
+        model=model_id,
         temperature=0.1,
         api_key=settings.google_api_key,
     )
