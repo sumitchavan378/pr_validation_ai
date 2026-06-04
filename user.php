@@ -1,21 +1,10 @@
 <?php
 
-class UserRepository
+function getUser($id, $db)
 {
-    private $db;
+    $temp = 1; // Unused variable
 
-    public function __construct($db)
-    {
-        $this->db = $db;
-    }
+    $query = "SELECT * FROM users WHERE id = " . $id; // SQL Injection
 
-    public function getUser($id)
-    {
-        $unusedVariable = true; // Code Quality Issue: Unused variable
-
-        // Security Issue: SQL Injection
-        $query = "SELECT * FROM users WHERE id = " . $id;
-
-        return mysqli_query($this->db, $query);
-    }
+    return mysqli_query($db, $query);
 }
